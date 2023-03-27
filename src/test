@@ -1,0 +1,147 @@
+<template>
+  <div class="home">
+    <header>
+      Le projet fonctionne
+      <div>{{ fishes.length }} fishes</div>
+    </header>
+    <main>
+      <ul v-for="fish in fishes" :key="fish.id">
+        <li>{{ fish.name }} : {{ fish.comments }}</li>
+      </ul>
+    </main>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import store from "../store/index";
+
+export default defineComponent({
+  name: "HomeView",
+  components: {},
+  computed: {
+    fishes() {
+      return store.state.fish;
+    },
+  },
+});
+</script>
+
+<style>
+.home {
+}
+header {
+  top: 0;
+  position: sticky;
+  min-height: 120px;
+  background: #33afaf;
+}
+main {
+  overflow-y: hidden;
+  /*  font-size: 120px; */
+}
+</style>
+
+
+
+
+<template>
+  <div>
+    <h1>Produits</h1>
+    <ul>
+      <li v-for="product in products" :key="product.id">
+        name : {{ product.name }} , price : {{ product.price }} , unite :
+        {{ product.unit }} , comments : {{ product.comments }}
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
+import { getProducts } from '@/api/productsApi.js';
+
+export default {
+  data() {
+    return {
+      products: []
+    }
+  },
+  created() {
+    getProducts()
+      .then(data => {
+        this.products = data;
+      })
+  }
+}
+</script>
+
+
+
+
+
+------------------------------------
+
+productview via API 
+
+
+
+<template>
+  <div class="card-list"></div>
+  <div class="card">
+    <div class="card-body">
+      <h2 class="card-title">{{ store_products.name }}</h2>
+      <p class="card-text"><strong>unit:</strong> {{ store_products.unit }}</p>
+      <p class="card-text"><strong>id:</strong> {{ store_products.id }}</p>
+      <p class="card-text">
+        <strong>price:</strong> {{ store_products.price }}
+      </p>
+      <p class="card-text">
+        <strong>category</strong> {{ store_products.category }}
+      </p>
+      <p class="card-text">
+        <strong>availability</strong> {{ store_products.availability }}
+      </p>
+      <p class="card-text">
+        <strong>comments:</strong> {{ store_products.comments }}
+      </p>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+import axios from 'axios'
+import store from '@/store'
+
+export default defineComponent({
+  name: 'ProductDetail',
+  components: {},
+  computed: {
+    store_products() {
+      return store.state.fish.find(
+        fish => fish.id.toString() === this.$route.params.id
+      )
+    },
+  },
+  /* data() {
+    return {
+      details_product: [],
+    }
+  },
+   mounted() {
+    axios
+      .get(
+        'http://localhost:8080/tig/product/' +
+          this.$route.params.id +
+          '/?format=json'
+      )
+      .then(response => {
+        this.details_product = response.data
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  },
+  */
+})
+</script>
